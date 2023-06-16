@@ -142,6 +142,7 @@ export class Osc {
 
     onMessage = ({ address, value }: OscMessage) => {
         this.instance.log("debug", `OSC message received: ${address} ${value}`);
+        console.log("debug", `OSC message received: ${address} ${value}`);
 
         if (address === "/oa/error") {
             if (value === "TOO_MANY_CONNECTIONS") {

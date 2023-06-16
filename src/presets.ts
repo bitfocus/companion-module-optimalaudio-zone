@@ -43,8 +43,8 @@ export function getPresetList(instance: Instance): CompanionPresetDefinitions {
     const presets: CompanionPresetDefinitionsExt = {};
 
     getZones(instance).forEach((zone) => {
-        const color = colors[zone.id - 1].lighten(0.3);
-        const selectedColor = colors[zone.id - 1].saturate(0.2);
+        const color = colors[Number(zone.id) - 1].lighten(0.3);
+        const selectedColor = colors[Number(zone.id) - 1].saturate(0.2);
 
         [...sources].forEach(([source, sourceType]) => {
             let label;
