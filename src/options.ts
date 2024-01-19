@@ -18,16 +18,16 @@ export interface Options {
 }
 
 export const colors: Color[] = [
-    Color("#F94144"),
-    Color("#F9C74F"),
-    Color("#90BE6D"),
-    Color("#43AA8B"),
-    Color("#F3722C"),
-    Color("#577590"),
-    Color("#F9844A"),
-    Color("#4D908E"),
-    Color("#F8961E"),
-    Color("#277DA1"),
+    Color("#6177B4"),
+    Color("#866AB0"),
+    Color("#905A88"),
+    Color("#7A5A9A"),
+    Color("#3578C0"),
+    Color("#008CA0"),
+    Color("#008F83"),
+    Color("#298D6F"),
+    Color("#0089C4"),
+    Color("#009AB4"),
 ];
 
 export const getTextColorBasedOnBackground = (color: Color) => {
@@ -116,6 +116,7 @@ export const getRoutines = (instance: Instance): DropdownChoice[] => {
 };
 
 export const levelItems = ["music", "mic", "system_mic_1", "system_mic_2"];
+export const levelIcons = ["♫", "", "", ""];
 
 export const sources = new Map<number, string>([
     [1, "local"],
