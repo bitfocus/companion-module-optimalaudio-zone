@@ -1,6 +1,6 @@
 # companion-module-optimalaudio-zone
 
-Bitfocus Companion module for controlling Optimal Audio's [Zone](https://optimal-audio.co.uk/products/controllers/zone/) series of audio controllers. See [HELP.md](./HELP.md).
+Bitfocus Companion module for controlling Optimal Audio's [Zone](https://optimal-audio.co.uk/products/controllers/zone/) series of audio controllers. See [HELP.md](./companion/HELP.md).
 
 ## Development
 
