@@ -20,7 +20,7 @@ export function getActions(instance: Instance): {
             callback: (action): void => {
                 instance.osc?.sendCommand(
                     "/oa/zone/routine/trigger",
-                    action.options.routine as number
+                    action.options.routine as number,
                 );
             },
         },
@@ -30,7 +30,7 @@ export function getActions(instance: Instance): {
             callback: (action): void => {
                 instance.osc?.sendCommand(
                     `/oa/zone/set/zone/${action.options.zone}/source`,
-                    Number(action.options.source)
+                    Number(action.options.source),
                 );
             },
         },
@@ -40,7 +40,7 @@ export function getActions(instance: Instance): {
             callback: (action): void => {
                 instance.osc?.sendCommand(
                     `/oa/zone/set/zone/${action.options.zone}/level/${action.options.levelItem}`,
-                    Number(action.options.level)
+                    Number(action.options.level),
                 );
             },
         },

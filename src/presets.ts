@@ -1,7 +1,7 @@
 import {
     combineRgb,
     CompanionButtonPresetDefinition,
-    CompanionPresetDefinitions,
+    CompanionPresetDefinitions
 } from "@companion-module/base";
 import { ActionId } from "./actions";
 import { FeedbackId } from "./feedback";
@@ -12,7 +12,7 @@ import {
     getRoutines,
     levelItems,
     colors,
-    getTextColorBasedOnBackground,
+    getTextColorBasedOnBackground
 } from "./options";
 import { printLabel } from "./variables";
 
@@ -35,6 +35,7 @@ interface CompanionPresetExt extends CompanionButtonPresetDefinition {
         >;
     }>;
 }
+
 interface CompanionPresetDefinitionsExt {
     [id: string]: CompanionPresetExt | undefined;
 }
@@ -63,7 +64,7 @@ export function getPresetList(instance: Instance): CompanionPresetDefinitions {
                     text: `$(Zone:name_zone_${zone.id}): ${label}`,
                     size: "auto",
                     color: getTextColorBasedOnBackground(color),
-                    bgcolor: color.rgbNumber(),
+                    bgcolor: color.rgbNumber()
                 },
                 steps: [
                     {
@@ -72,26 +73,26 @@ export function getPresetList(instance: Instance): CompanionPresetDefinitions {
                                 actionId: ActionId.selectSource,
                                 options: {
                                     zone: zone.id,
-                                    source,
-                                },
-                            },
+                                    source
+                                }
+                            }
                         ],
-                        up: [],
-                    },
+                        up: []
+                    }
                 ],
                 feedbacks: [
                     {
                         feedbackId: FeedbackId.selectedSource,
                         options: {
                             zone: zone.id,
-                            source: source,
+                            source: source
                         },
                         style: {
                             color: getTextColorBasedOnBackground(color),
-                            bgcolor: selectedColor.rgbNumber(),
-                        },
-                    },
-                ],
+                            bgcolor: selectedColor.rgbNumber()
+                        }
+                    }
+                ]
             };
         });
 
@@ -107,7 +108,7 @@ export function getPresetList(instance: Instance): CompanionPresetDefinitions {
                     )}`,
                     size: "auto",
                     color: getTextColorBasedOnBackground(color),
-                    bgcolor: color.rgbNumber(),
+                    bgcolor: color.rgbNumber()
                 },
                 steps: [
                     {
@@ -117,14 +118,14 @@ export function getPresetList(instance: Instance): CompanionPresetDefinitions {
                                 options: {
                                     zone: zone.id,
                                     levelItem,
-                                    levelChange: 10,
-                                },
-                            },
+                                    levelChange: 10
+                                }
+                            }
                         ],
-                        up: [],
-                    },
+                        up: []
+                    }
                 ],
-                feedbacks: [],
+                feedbacks: []
             };
 
             const decrease = `zone_${zone.id}_decrease_${levelItem}`;
@@ -138,7 +139,7 @@ export function getPresetList(instance: Instance): CompanionPresetDefinitions {
                     )}`,
                     size: "auto",
                     color: getTextColorBasedOnBackground(color),
-                    bgcolor: color.rgbNumber(),
+                    bgcolor: color.rgbNumber()
                 },
                 steps: [
                     {
@@ -148,14 +149,14 @@ export function getPresetList(instance: Instance): CompanionPresetDefinitions {
                                 options: {
                                     zone: zone.id,
                                     levelItem,
-                                    levelChange: -10,
-                                },
-                            },
+                                    levelChange: -10
+                                }
+                            }
                         ],
-                        up: [],
-                    },
+                        up: []
+                    }
                 ],
-                feedbacks: [],
+                feedbacks: []
             };
         });
     });
@@ -170,7 +171,7 @@ export function getPresetList(instance: Instance): CompanionPresetDefinitions {
                 text: `Routine: $(Zone:name_routine_${routine.id})`,
                 size: "auto",
                 color: combineRgb(0, 0, 0),
-                bgcolor: combineRgb(230, 230, 230),
+                bgcolor: combineRgb(230, 230, 230)
             },
             steps: [
                 {
@@ -178,14 +179,14 @@ export function getPresetList(instance: Instance): CompanionPresetDefinitions {
                         {
                             actionId: ActionId.selectRoutine,
                             options: {
-                                routine: routine.id,
-                            },
-                        },
+                                routine: routine.id
+                            }
+                        }
                     ],
-                    up: [],
-                },
+                    up: []
+                }
             ],
-            feedbacks: [],
+            feedbacks: []
         };
     });
     return presets;

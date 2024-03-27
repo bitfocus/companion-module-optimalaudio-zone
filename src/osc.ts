@@ -42,27 +42,27 @@ export class Osc {
                 if (err.code === "ECONNRESET") {
                     this.instance.updateStatus(
                         InstanceStatus.ConnectionFailure,
-                        tooManyConnectionsMessage
+                        tooManyConnectionsMessage,
                     );
                 } else if (err.code === "ECONNREFUSED") {
                     this.instance.updateStatus(
                         InstanceStatus.ConnectionFailure,
-                        "Please check that the device is turned on and that the address and port are correct."
+                        "Please check that the device is turned on and that the address and port are correct.",
                     );
                 } else {
                     this.instance.updateStatus(
                         InstanceStatus.ConnectionFailure,
-                        err.code
+                        err.code,
                     );
                 }
 
                 this.instance.log(
                     "error",
-                    "Connection error: " + JSON.stringify(err)
+                    "Connection error: " + JSON.stringify(err),
                 );
 
                 this.hasSetError = true;
-            }
+            },
         );
 
         this.client.on("close", () => {
@@ -82,12 +82,19 @@ export class Osc {
     connect = () => {
         this.retryTimeout && clearTimeout(this.retryTimeout);
         this.instance.updateStatus(InstanceStatus.Connecting);
+
+        if (!this.instance.config.port || !this.instance.config.host) {
+            this.instance.updateStatus(InstanceStatus.BadConfig);
+            return;
+        }
+
         this.client.connect(
             this.instance.config.port || 8001,
             this.instance.config.host || "127.0.0.1",
             () => {
                 this.instance.log("info", "Connected to TCP OSC server");
-            }
+                this.instance.updateStatus(InstanceStatus.Ok);
+            },
         );
         this.hasSetError = false;
     };
@@ -109,20 +116,26 @@ export class Osc {
          * Start by initializing a byte array with the correct length.
          */
         const bytes = new Uint8Array(this.buffer.length + data.length);
-        bytes.set(this.buffer); /** Copy the old buffer into the new one */
-        bytes.set(data, this.buffer.length); /** Append the new data */
+        bytes.set(this.buffer);
+        /** Copy the old buffer into the new one */
+        bytes.set(data, this.buffer.length);
+        /** Append the new data */
 
         const dataView = new DataView(bytes.buffer);
 
         /** Read one message at a time */
         let offset = 0;
         while (offset + 4 < dataView.byteLength) {
-            const lineLength = dataView.getInt32(offset, true);
+            const lineLength = dataView.getInt32(offset, false);
 
-            if (lineLength > 1_000_000) {
-                console.log(dataView.buffer.slice(offset));
+            if (lineLength > 10_000) {
+                // console.log(dataView.buffer.slice(offset));
+                this.instance.log("error", "Malformed data received.");
+                this.instance.updateStatus(InstanceStatus.UnknownError);
+
+                /** Note: Errors are not caught by Companion! This stops execution */
                 throw new Error(
-                    "Malformed data received. Failed to decode line length."
+                    "Malformed data received. Failed to decode line length.",
                 );
             }
 
@@ -130,7 +143,8 @@ export class Osc {
                 /** We haven't received enough data */
                 break;
             }
-            offset += 4; /** The uint32 length descriptor is 4 bytes */
+            offset += 4;
+            /** The uint32 length descriptor is 4 bytes */
             const line = dataView.buffer.slice(offset, offset + lineLength);
             offset += lineLength;
             this.onMessage(this.parseOscLine(line));
@@ -141,14 +155,13 @@ export class Osc {
     };
 
     onMessage = ({ address, value }: OscMessage) => {
-        this.instance.log("debug", `OSC message received: ${address} ${value}`);
-        console.log("debug", `OSC message received: ${address} ${value}`);
+        this.instance.log("info", `OSC message received: ${address} ${value}`);
 
         if (address === "/oa/error") {
             if (value === "TOO_MANY_CONNECTIONS") {
                 this.instance.updateStatus(
                     InstanceStatus.ConnectionFailure,
-                    tooManyConnectionsMessage
+                    tooManyConnectionsMessage,
                 );
                 this.hasSetError = true;
             }
@@ -172,6 +185,12 @@ export class Osc {
     sendCommand = (address: string, arg?: string | number): void => {
         this.instance.log("info", `sending ${JSON.stringify(address)} ${arg}`);
 
+        /**
+         * Optimistically save even before server has acknowledged.
+         */
+        this.instance.oscValues[address] = arg;
+        this.instance.updateInstance();
+
         let args: { type: string; value: any }[] = [];
         if (typeof arg === "string") {
             args = [{ type: "s", value: arg }];
@@ -183,7 +202,9 @@ export class Osc {
             address,
             args,
         });
-        this.client.write(buffer);
+        const lengthBigEndian = Buffer.alloc(4);
+        lengthBigEndian.writeUInt32BE(buffer.byteLength, 0);
+        this.client.write(Buffer.concat([lengthBigEndian, buffer]));
     };
 
     parseOscLine = (buffer: ArrayBuffer): OscMessage => {
@@ -200,7 +221,7 @@ export class Osc {
         } else if (valueArr.length > 2) {
             this.instance.log(
                 "error",
-                "OSC messages with more than 2 arguments not currently supported"
+                "OSC messages with more than 2 arguments not currently supported",
             );
         }
         return {

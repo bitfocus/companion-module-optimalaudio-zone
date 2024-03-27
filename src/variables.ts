@@ -56,11 +56,27 @@ export class Variables {
                 if ("value" in variable) {
                     output[key] = variable.value;
                 } else {
-                    output[key] = this.instance.oscValues[variable.oscAddress];
+                    /** Round levels */
+                    if (
+                        variable.oscAddress.startsWith("/oa/zone/set/") &&
+                        typeof this.instance.oscValues[variable.oscAddress] ===
+                            "number"
+                    ) {
+                        output[key] = Math.round(
+                            Math.round(
+                                this.instance.oscValues[
+                                    variable.oscAddress
+                                ] as number,
+                            ),
+                        );
+                    } else {
+                        output[key] =
+                            this.instance.oscValues[variable.oscAddress];
+                    }
                 }
                 return output;
             },
-            {} as CompanionVariableValues
+            {} as CompanionVariableValues,
         );
     }
 

@@ -1,4 +1,4 @@
-import { Regex, SomeCompanionConfigField } from "@companion-module/base";
+import { SomeCompanionConfigField } from "@companion-module/base";
 
 export interface Config {
     label: string;
@@ -7,27 +7,19 @@ export interface Config {
 }
 
 export const configFields: SomeCompanionConfigField[] = [
-    // {
-    //     type: "static-text",
-    //     width: 12,
-    //     value: '',
-    //     id: "info on license",
-    //     label: "Important note",
-    // },
     {
         type: "textinput",
         id: "host",
-        label: "Target host",
+        label: "Host (IP address or mDNS name)",
         width: 6,
-        default: "0.0.0.0",
-        regex: Regex.IP,
+        default: "optimalaudio.local",
     },
     {
         type: "number",
         id: "port",
-        label: "Sending port",
+        label: "Port",
         width: 6,
-        default: 8001,
+        default: 8000,
         min: 1,
         max: 65535,
         step: 1,

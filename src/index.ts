@@ -3,9 +3,9 @@ import {
     runEntrypoint,
     SomeCompanionConfigField,
 } from "@companion-module/base";
-import { configFields, Config } from "./config";
+import { Config, configFields } from "./config";
 import { getActions } from "./actions";
-import { getFeedbacks, FeedbackId } from "./feedback";
+import { FeedbackId, getFeedbacks } from "./feedback";
 import { getPresetList } from "./presets";
 import { Variables } from "./variables";
 import { Osc } from "./osc";
@@ -33,18 +33,12 @@ export class Instance extends InstanceBase<Config> {
 
     async init(config: Config): Promise<void> {
         this.log("info", `Optimal Audio Zone module is being initialized`);
-
-        await this.configUpdated(config);
+        void this.configUpdated(config);
     }
 
     async configUpdated(config: Config): Promise<void> {
         this.config = config;
-        this.saveConfig(config);
-        this.log("info", "Changing Optimal Audio Zone config");
-
-        this.oscValues = {};
-        this.osc?.destroy();
-        this.osc = new Osc(this);
+        this.restartOsc(config);
         this.updateInstance();
     }
 
@@ -53,8 +47,16 @@ export class Instance extends InstanceBase<Config> {
     }
 
     async destroy() {
-        this.log("debug", `Instance destroyed: ${this.id}`);
+        this.log("info", `Instance destroyed: ${this.id}`);
         this.osc?.destroy();
+    }
+
+    restartOsc(config?: Config) {
+        this.oscValues = {};
+        this.osc?.destroy();
+        if (config?.host) {
+            this.osc = new Osc(this);
+        }
     }
 
     updateInstance(): void {

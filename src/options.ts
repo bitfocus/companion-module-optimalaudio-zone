@@ -2,7 +2,7 @@ import {
     CompanionInputFieldNumber,
     CompanionInputFieldDropdown,
     DropdownChoice,
-    combineRgb,
+    combineRgb
 } from "@companion-module/base";
 import { Instance } from "./index";
 import { printLabel } from "./variables";
@@ -27,7 +27,7 @@ export const colors: Color[] = [
     Color("#008F83"),
     Color("#298D6F"),
     Color("#0089C4"),
-    Color("#009AB4"),
+    Color("#009AB4")
 ];
 
 export const getTextColorBasedOnBackground = (color: Color) => {
@@ -42,14 +42,14 @@ export const getOptions = (instance: Instance): Options => ({
         label: "Routine",
         id: "routine",
         default: 1,
-        choices: getRoutines(instance),
+        choices: getRoutines(instance)
     },
     zone: {
         type: "dropdown",
         label: "Zone",
         id: "zone",
         default: 1,
-        choices: getZones(instance),
+        choices: getZones(instance)
     },
     source: {
         type: "dropdown",
@@ -58,8 +58,8 @@ export const getOptions = (instance: Instance): Options => ({
         default: 1,
         choices: [...sources].map(([value, label]) => ({
             id: value,
-            label: printLabel(label),
-        })),
+            label: printLabel(label)
+        }))
     },
     levelItem: {
         type: "dropdown",
@@ -68,8 +68,8 @@ export const getOptions = (instance: Instance): Options => ({
         default: levelItems[0],
         choices: levelItems.map((levelItem) => ({
             id: levelItem,
-            label: printLabel(levelItem),
-        })),
+            label: printLabel(levelItem)
+        }))
     },
     level: {
         type: "number",
@@ -79,7 +79,7 @@ export const getOptions = (instance: Instance): Options => ({
         step: 1,
         min: 0,
         max: 100,
-        range: true,
+        range: true
     },
     levelChange: {
         type: "number",
@@ -89,8 +89,8 @@ export const getOptions = (instance: Instance): Options => ({
         step: 1,
         min: -100,
         max: 100,
-        range: true,
-    },
+        range: true
+    }
 });
 
 export const getZones = (instance: Instance): DropdownChoice[] => {
@@ -125,5 +125,5 @@ export const sources = new Map<number, string>([
     [4, "line_in_3"],
     [5, "line_in_4"],
     [6, "hdmi_1"],
-    [7, "hdmi_2"],
+    [7, "hdmi_2"]
 ]);
