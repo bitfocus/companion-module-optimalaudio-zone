@@ -15,12 +15,12 @@
 		"tabWidth": 4
 	},
 	"dependencies": {
-		"@companion-module/base": "^1.8.0",
+		"@companion-module/base": "^1.15.1",
 		"color": "^4.2.3",
 		"osc": "^2.4.4"
 	},
 	"devDependencies": {
-		"@companion-module/tools": "^2.8.0",
+		"@companion-module/tools": "^2.9.1",
 		"@types/color": "^3.0.3",
 		"@types/node": "^20.11.30",
 		"prettier": "^3.2.5",
